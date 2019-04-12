@@ -17,6 +17,75 @@ class WorkOrderController extends Controller
     }
 
     /**
+     * Show all work order
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index(Request $request)
+    {
+        $query = WorkOrder::whereNull('status')->orderBy('source', 'desc');
+
+        if ($request->search) {
+            $query = $query->where('sto', 'like', '%'.$request->search.'%')
+                ->orWhere('source', 'like', '%'.$request->search.'%')
+                ->orWhere('id', 'like', '%'.$request->search.'%')
+                ->orWhere('ref_id', 'like', '%'.$request->search.'%')
+                ->orWhere('customer_name', 'like', '%'.$request->search.'%');
+        }
+
+        if ($request->start_date) {
+            $query = $query->where('order_date', '>=', $request->start_date);
+        }
+        if ($request->end_date) {
+            $query = $query->where('order_date', '<=', $request->end_date);
+        }
+        if ($request->sto) {
+            $query = $query->where('sto', $request->sto);
+        }
+        if ($request->source) {
+            $query = $query->where('source', $request->source);
+        }
+
+        return view('work-order.index')
+            ->with([
+                'workOrders' => $query->get()
+            ]);
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function closed(Request $request)
+    {
+        $query = WorkOrder::whereNotNull('status')->orderBy('updated_at', 'desc');
+
+        if ($request->search) {
+            $query = $query->where('sto', 'like', '%'.$request->search.'%')
+                ->orWhere('source', 'like', '%'.$request->search.'%')
+                ->orWhere('id', 'like', '%'.$request->search.'%')
+                ->orWhere('ref_id', 'like', '%'.$request->search.'%')
+                ->orWhere('customer_name', 'like', '%'.$request->search.'%');
+        }
+
+        if ($request->start_date) {
+            $query = $query->where('order_date', '>=', $request->start_date);
+        }
+        if ($request->end_date) {
+            $query = $query->where('order_date', '<=', $request->end_date);
+        }
+        if ($request->sto) {
+            $query = $query->where('sto', $request->sto);
+        }
+        if ($request->source) {
+            $query = $query->where('source', $request->source);
+        }
+
+        return view('work-order.index')
+            ->with([
+                'workOrders' => $query->get()
+            ]);
+    }
+
+    /**
      * Show create work order form
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -49,12 +118,12 @@ class WorkOrderController extends Controller
             $workOrder = new WorkOrder();
             $workOrder->fill($request->except('_token'));
             $workOrder->order_date = now();
-            $workOrder->status = 'PT1';
+            $workOrder->created_by = auth()->user()->id;
             $workOrder->save();
 
             // committing db transaction and redirect to home if success
             DB::commit();
-            return redirect(route('home'))->with([
+            return redirect(route('work-order.index'))->with([
                 'status' => 'Work Order successfully created.'
             ]);
         } catch (\Exception $e) {
@@ -64,6 +133,18 @@ class WorkOrderController extends Controller
                 'error' => $e->getMessage()
             ]);
         }
+    }
+
+    /**
+     * Show detail form with
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function show($id)
+    {
+        return view('work-order.show')->with([
+            'workOrder' => WorkOrder::findOrFail($id)
+        ]);
     }
 
     /**
@@ -96,12 +177,15 @@ class WorkOrderController extends Controller
             // start db transaction and updating work order data
             DB::beginTransaction();
             $workOrder = WorkOrder::findOrFail($id);
-            $workOrder->fill($request->except(['_token', '_method']));
+            $workOrder->status = $request->status;
+            $workOrder->description = $request->description;
+            $workOrder->surveyor = $request->surveyor;
+            $workOrder->surveyed_at = now();
             $workOrder->save();
 
             // committing db transaction and redirect to home
             DB::commit();
-            return redirect(route('home'))->with([
+            return redirect(route('work-order.index'))->with([
                 'status' => 'Work Order successfully updated.'
             ]);
         } catch (\Exception $e) {
@@ -111,5 +195,19 @@ class WorkOrderController extends Controller
                 'error' => $e->getMessage()
             ]);
         }
+    }
+
+    /**
+     * Delete WO
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function delete($id)
+    {
+        WorkOrder::findOrFail($id)->delete();
+        return redirect(route('work-order.index'))->with([
+            'status' => 'Work Order successfully deleted'
+        ]);
     }
 }

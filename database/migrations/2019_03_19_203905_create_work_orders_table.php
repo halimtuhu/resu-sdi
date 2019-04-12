@@ -22,9 +22,10 @@ class CreateWorkOrdersTable extends Migration
             $table->string('sto');
             $table->string('source');
             $table->string('ref_id');
-            $table->string('status');
+            $table->string('status')->nullable();
             $table->text('description')->nullable();
             $table->integer('surveyor')->nullable();
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
     }

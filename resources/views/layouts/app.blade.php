@@ -2,143 +2,188 @@
 <html lang="{{ config('app.locale', 'en') }}">
 
 <head>
+    <meta charset="utf-8" />
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/apple-icon.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('img/favicon.ico') }}">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>{{ config('app.name') }} | @yield('title')</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    <!-- CSS Files -->
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/light-bootstrap-dashboard.css?v=2.0.1') }}" rel="stylesheet" />
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="{{ asset('vendor/font-awesome/css/all.css') }}">
 
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
+    <style>
+        @media (max-width: 767.98px) {
+            .content {
+                padding: 15px 0 !important;
+            }
+        }
 
-  <title>{{ config('app.name', 'Laravel') }} - @yield('title')</title>
+        .modal {
+            top: -120px !important;
+        }
+    </style>
 
-  <!-- Custom fonts for this template-->
-  <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-  <!-- Page level plugin CSS-->
-  <link href="{{ asset('vendor/datatables/dataTables.bootstrap4.css') }}" rel="stylesheet">
-
-  <!-- Custom styles for this template-->
-  <link href="{{ asset('css/sb-admin.css') }}" rel="stylesheet">
-
+    @stack('styles')
 </head>
 
-<body id="page-top" class="sidebar-toggled">
+<body>
+@stack('modals')
+<div class="wrapper">
+    <div class="sidebar" data-image="{{ asset('img/background-1.jpg') }}" data-color="{{ auth()->user()->isAdmin() ? 'black' : 'red' }}">
+        <!--
+    Tip 1: You can change the color of the sidebar using: data-color="purple | blue | green | orange | red"
 
-<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
-
-  <a class="navbar-brand mr-1" href="{{ route('home') }}">{{ config('app.name') }}</a>
-
-  <button class="btn btn-link btn-sm text-white order-0" id="sidebarToggle" href="#">
-    <i class="fas fa-bars"></i>
-  </button>
-
-  <div class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0"></div>
-
-  <!-- Navbar -->
-  <ul class="navbar-nav ml-auto ml-md-0">
-    <li class="nav-item dropdown no-arrow">
-      <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="fas fa-user-circle fa-fw"></i>
-      </a>
-      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
-      </div>
-    </li>
-  </ul>
-
-</nav>
-
-<div id="wrapper">
-
-  <!-- Sidebar -->
-  <ul class="sidebar navbar-nav toggled">
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="fas fa-fw fa-folder"></i>
-        <span>Work Orders</span>
-      </a>
-      <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-        <a class="dropdown-item" href="{{ route('home') }}">All Work Order</a>
-        <a class="dropdown-item" href="{{ route('work-order.create') }}">Create Work Order</a>
-        <a class="dropdown-item" href="#">Review Order</a>
-        <a class="dropdown-item" href="#">Closed Order</a>
-      </div>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">
-        <i class="fas fa-fw fa-chart-area"></i>
-        <span>Users</span></a>
-    </li>
-  </ul>
-
-  <div id="content-wrapper">
-
-    <div class="container-fluid">
-
-      <!-- Breadcrumbs-->
-      <ol class="breadcrumb">
-        @yield('breadcrumb')
-      </ol>
-
-      <!-- Page Content -->
-      @yield('content')
-
+    Tip 2: you can also add an image using data-image tag
+  -->
+        <div class="sidebar-wrapper">
+            <div class="logo">
+                <a href="{{ route('home') }}" class="simple-text">
+                    {{ config('app.name') }}
+                </a>
+            </div>
+            <ul class="nav">
+                <li class="nav-item{{ Route::is('home') ? ' active' : '' }}">
+                    <a class="nav-link" href="{{ route('home') }}">
+                        <i class="nc-icon nc-app"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                @if(auth()->user()->isAdmin())
+                    <li class="nav-item{{ Route::is('work-order.create') ? ' active' : '' }}">
+                        <a class="nav-link" href="{{ route('work-order.create') }}">
+                            <i class="nc-icon nc-paper-2"></i>
+                            <p>Create Workorder</p>
+                        </a>
+                    </li>
+                @endif
+                <li class="nav-item{{ Route::is('work-order.index') ? ' active' : '' }}">
+                    <a class="nav-link" href="{{ route('work-order.index') }}">
+                        <i class="nc-icon nc-bullet-list-67"></i>
+                        <p>Review Workorders</p>
+                    </a>
+                </li>
+                @if(auth()->user()->isAdmin())
+                    <li class="nav-item{{ Route::is('work-order.closed') ? ' active' : '' }}">
+                        <a class="nav-link" href="{{ route('work-order.closed') }}">
+                            <i class="nc-icon nc-notes"></i>
+                            <p>Closed Workorders</p>
+                        </a>
+                    </li>
+                    <li class="nav-item{{ strpos(request()->url(), 'admin-management') ? ' active' : '' }}">
+                        <a class="nav-link" href="{{ route('admin-management.index') }}">
+                            <i class="nc-icon nc-circle-09"></i>
+                            <p>Admins</p>
+                        </a>
+                    </li>
+                    <li class="nav-item{{ strpos(request()->url(), 'technician-management') ? ' active' : '' }}">
+                        <a class="nav-link" href="{{ route('technician-management.index') }}">
+                            <i class="nc-icon nc-circle-09"></i>
+                            <p>Technicians</p>
+                        </a>
+                    </li>
+                @endif
+            </ul>
+        </div>
     </div>
-    <!-- /.container-fluid -->
+    <div class="main-panel">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg " color-on-scroll="500">
+            <div class=" container-fluid  ">
+                <a class="navbar-brand" href="#pablo"> @yield('title') </a>
+                <button href="" class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-bar burger-lines"></span>
+                    <span class="navbar-toggler-bar burger-lines"></span>
+                    <span class="navbar-toggler-bar burger-lines"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navigation">
+                    <ul class="nav navbar-nav mr-auto">
 
-    <!-- Sticky Footer -->
-    <footer class="sticky-footer" style="height: 50px;">
-      <div class="container my-auto">
-        <div class="copyright text-center my-auto">
-          <span>Copyright © RSU - SDI 2019</span>
+                    </ul>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#pablo" onclick="$('#logout-form').submit();">
+                                <span class="no-icon">Log out</span>
+                            </a>
+                        </li>
+                        <form action="{{ route('logout') }}" method="post" id="logout-form">@csrf</form>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- End Navbar -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="section">
+                    @yield('contents')
+                </div>
+            </div>
         </div>
-      </div>
-    </footer>
-
-  </div>
-  <!-- /.content-wrapper -->
-
-</div>
-<!-- /#wrapper -->
-
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-  <i class="fas fa-angle-up"></i>
-</a>
-
-<!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <form action="{{ route('logout') }}" method="post">
-        @csrf
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Logout</button>
-        </div>
-      </form>
+        <footer class="footer">
+            <div class="container">
+                <nav>
+                    <p class="copyright text-center">
+                        ©
+                        <script>
+                            document.write(new Date().getFullYear())
+                        </script>
+                        <a href="{{ route('home') }}">{{ config('app.name') }}</a>, made with love for a better world
+                    </p>
+                </nav>
+            </div>
+        </footer>
     </div>
-  </div>
 </div>
-
-<!-- Bootstrap core JavaScript-->
-<script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-<script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-
-<!-- Core plugin JavaScript-->
-<script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
-
-<!-- Custom scripts for all pages-->
-<script src="{{ asset('js/sb-admin.min.js') }}"></script>
-
 </body>
+<!--   Core JS Files   -->
+<script src="{{ asset('js/core/jquery.3.2.1.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('js/core/popper.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('js/core/bootstrap.min.js') }}" type="text/javascript"></script>
+<!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
+<script src="{{ asset('js/plugins/bootstrap-switch.js') }}"></script>
+<!--  Chartist Plugin  -->
+<script src="{{ asset('js/plugins/chartist.min.js') }}"></script>
+<!--  Notifications Plugin    -->
+<script src="{{ asset('js/plugins/bootstrap-notify.js') }}"></script>
+<!-- Control Center for Light Bootstrap Dashboard: scripts for the example pages etc -->
+<script src="{{ asset('js/light-bootstrap-dashboard.js?v=2.0.1') }}" type="text/javascript"></script>
+
+<script>
+    @if(session('status'))
+        $(document).ready(function () {
+            $.notify({
+                icon: "nc-icon nc-check-2",
+                message: "{{ session('status') }}"
+            }, {
+                type: 'info',
+                timer: 8000,
+                placement: {
+                    from: 'top',
+                    align: 'right'
+                }
+            });
+        });
+    @endif
+
+    @if(session('error'))
+        $(document).ready(function () {
+            $.notify({
+                icon: "nc-icon nc-simple-remove",
+                message: "{{ session('error') }}"
+            }, {
+                type: 'danger',
+                timer: 8000,
+                placement: {
+                    from: 'top',
+                    align: 'right'
+                }
+            });
+        });
+    @endif
+</script>
 
 </html>

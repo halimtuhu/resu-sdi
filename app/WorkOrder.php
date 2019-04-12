@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class WorkOrder extends Model
 {
@@ -25,4 +26,27 @@ class WorkOrder extends Model
         'source',
         'ref_id'
     ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'surveyed_at' => 'datetime'
+    ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function surveyorDetail()
+    {
+        return $this->belongsTo(User::class, 'surveyor', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
+    }
 }
