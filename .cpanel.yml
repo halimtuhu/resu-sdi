@@ -2,6 +2,5 @@
 deployment:
   tasks:
     - php artisan config:clear
-    - php artisan migrate
     - export DEPLOYPATH=/home/proq7992/public_html/resu/
     - /bin/cp -R /home/proq7992/repositories/resu-sdi $DEPLOYPATH
