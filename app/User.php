@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'position', 'uid', 'phone_number', 'work_locations'
     ];
 
     /**
@@ -38,4 +38,28 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        if ($this->role == 'admin') {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTechnisian()
+    {
+        if ($this->role == 'technisian' or $this->role == null) {
+            return true;
+        }
+
+        return false;
+    }
 }

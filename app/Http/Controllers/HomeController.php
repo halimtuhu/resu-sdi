@@ -25,7 +25,7 @@ class HomeController extends Controller
     public function index()
     {
         return view('home')->with([
-            'workOrders' => WorkOrder::orderBy('created_at', 'desc')->get()
+            'workOrders' => WorkOrder::all()
         ]);
     }
 }

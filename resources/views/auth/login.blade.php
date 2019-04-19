@@ -1,73 +1,110 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="{{ config('app.locale', 'en') }}">
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+<head>
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+    <title>RESU-SDI | Login</title>
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
+    <!-- Custom fonts for this template-->
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
 
-                                @if ($errors->has('email'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
+    <style>
+        html {
+            margin: 0px;
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            margin: 0px;
+            min-height: 100%;
+            width: 100%;
+            background-image: url({{ asset('img/background-1.jpg') }});
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        body .container {
+            width: 100%;
+            height: 100vh;
+        }
+
+        body .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.75);
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row h-100 justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6 my-auto">
+                <div class="card card-login mx-auto mt-5 border-0 shadow-sm">
+                    <div class="card-header bg-danger border-0 text-light text-center">
+                        <h3>WELCOME</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('login') }}" method="post">
+                            @csrf
+                            <div class="form-group">
+                                <div class="form-label-group">
+                                    <input type="email" id="inputEmail" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="Email address" required="required" autofocus="autofocus" name="email" value="{{ old('email') }}">
+                                    @if($errors->has('email'))
+                                        <span class="has-error">
+                                            <strong>{{ $errors->first('email') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
-
-                                @if ($errors->has('password'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
+                            <div class="form-group">
+                                <div class="form-label-group">
+                                    <input type="password" id="inputPassword" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="Password" required="required" name="password">
+                                    @if($errors->has('password'))
+                                        <span class="has-error">
+                                            <strong>{{ $errors->first('password') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                                    <label class="form-check-label" for="remember">
-                                        {{ __('Remember Me') }}
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="remember-me">
+                                        Remember Me
                                     </label>
                                 </div>
                             </div>
+                            <button class="btn btn-danger btn-block" type="submit">Login</button>
+                        </form>
+                        <div class="mt-2 text-right">
+                            <a class="d-block small text-danger" href="{{ route('password.request') }}">Forgot Password?</a>
                         </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Login') }}
-                                </button>
-
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
-                    </form>
+                    </div>
                 </div>
+                <p class="text-center text-white small mt-5">RESU © 2019 Project SDI - By Eggie Dear Asmara - Universitas Muhammadiyah Sidoarjo</p>
             </div>
         </div>
     </div>
-</div>
-@endsection
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{{ asset('js/core/jquery.3.2.1.min.js') }}"></script>
+    <script src="{{ asset('js/core/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/core/popper.min.js') }}"></script>
+
+</body>
+
+</html>
