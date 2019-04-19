@@ -28,4 +28,14 @@ class HomeController extends Controller
             'workOrders' => WorkOrder::all()
         ]);
     }
+
+    /**
+     * Show the hello test page
+     *
+     * @return Illuminate\Contracts\Support\Renderable
+     */
+    public function hello()
+    {
+        return 'Hello there';
+    }
 }
