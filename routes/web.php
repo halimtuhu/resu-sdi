@@ -18,7 +18,6 @@ Auth::routes([
 ]);
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/hello', 'HomeController@hello')->name('hello');
 
 Route::get('/work-order', 'WorkOrderController@index')->name('work-order.index');
 Route::get('/work-order/closed', 'WorkOrderController@closed')->name('work-order.closed');

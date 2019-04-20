@@ -62,4 +62,15 @@ class User extends Authenticatable
 
         return false;
     }
+
+    /**
+     * Get technician work locations
+     * @return array
+     */
+    public function getWorkLocations()
+    {
+        $locations = explode(', ', $this->work_locations);
+
+        return $locations;
+    }
 }

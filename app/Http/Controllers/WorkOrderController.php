@@ -24,6 +24,10 @@ class WorkOrderController extends Controller
     {
         $query = WorkOrder::whereNull('status')->orderBy('source', 'desc');
 
+        if (auth()->user()->isTechnisian()) {
+            $query = $query->whereIn('sto', auth()->user()->getWorkLocations());
+        }
+
         if ($request->search) {
             $query = $query->where('sto', 'like', '%'.$request->search.'%')
                 ->orWhere('source', 'like', '%'.$request->search.'%')
