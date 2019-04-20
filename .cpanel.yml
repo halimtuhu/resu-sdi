@@ -1,6 +1,6 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/proq7992/public_html/resu/
-    - /bin/rm -R /home/proq7992/public_html/resu
+    - export DEPLOYPATH=/home/proq7992/public_html/resu
+    - /bin/rm -R $DEPLOYPATH
     - /bin/cp -R /home/proq7992/repositories/resu-sdi $DEPLOYPATH
