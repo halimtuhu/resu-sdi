@@ -17,25 +17,41 @@ class WorkOrderController extends Controller
     }
 
     /**
+     * @return bool|string
+     */
+    public function getSourcePriorityOrder()
+    {
+        $sourcePriority = '';
+        foreach (config('resu.source') as $source) {
+            $sourcePriority .= '"'.$source.'",';
+        }
+        $sourcePriority = substr($sourcePriority, 0, -1);
+
+        return $sourcePriority;
+    }
+
+    /**
      * Show all work order
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(Request $request)
     {
-        $query = WorkOrder::whereNull('status')->orderBy('source', 'desc');
+        $query = WorkOrder::whereNull('status')
+            ->whereIn('source', config('resu.source'))
+            ->orderBy(DB::raw('FIELD(source, '.$this->getSourcePriorityOrder().')'));
 
         if (auth()->user()->isTechnisian()) {
             $query = $query->whereIn('sto', auth()->user()->getWorkLocations());
         }
-
+        
         if ($request->search) {
             $query = $query->where('sto', 'like', '%'.$request->search.'%')
-                ->orWhere('source', 'like', '%'.$request->search.'%')
-                ->orWhere('id', 'like', '%'.$request->search.'%')
-                ->orWhere('ref_id', 'like', '%'.$request->search.'%')
-                ->orWhere('customer_name', 'like', '%'.$request->search.'%');
+            ->orWhere('source', 'like', '%'.$request->search.'%')
+            ->orWhere('id', 'like', '%'.$request->search.'%')
+            ->orWhere('ref_id', 'like', '%'.$request->search.'%')
+            ->orWhere('customer_name', 'like', '%'.$request->search.'%');
         }
-
+        
         if ($request->start_date) {
             $query = $query->where('order_date', '>=', $request->start_date);
         }

@@ -40,7 +40,7 @@
                             @endif
                         </div>
                         <div class="form-group">
-                            <label for="work_locations">Work Locations</label>
+                            <label for="work_locations">Work Locations <span class="badge-black">?</span></label>
                             <input type="text" id="work_locations" class="form-control" name="work_locations" value="{{ old('work_locations') }}">
                             <span class="small text-muted">Seperate with commas (,). Ex: PDA,GEM</span>
                             @if ($errors->has('work_locations'))
