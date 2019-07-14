@@ -25,7 +25,7 @@
             margin: 0px;
             min-height: 100%;
             width: 100%;
-            background-image: url({{ asset('img/background-1.jpg') }});
+            background-color: gray;
             background-position: center;
             background-size: cover;
             background-repeat: no-repeat;
