@@ -14,4 +14,23 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="font-weight-bold">Next WO</h5>
+                    <p class="h1 text-right">{{ $nextWO }} <span class="h5 muted">WO(s)</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="font-weight-bold">Technicians</h5>
+                    <p class="h1 text-right">{{ $technicians }} <span class="h5 muted">people(s)</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

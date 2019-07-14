@@ -52,6 +52,18 @@ class User extends Authenticatable
     /**
      * @return bool
      */
+    public function isTechnician()
+    {
+        if ($this->role == 'technician' or $this->role == null) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
     public function isTechnisian()
     {
         if ($this->role == 'technician' or $this->role == null) {

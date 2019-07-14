@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\WorkOrder;
 use Illuminate\Http\Request;
 
@@ -24,8 +25,15 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $nextWO = WorkOrder::whereNull('status')->count();
+        if (auth()->user()->isTechnician()) {
+            $nextWo = WorkOrder::whereIn('source', auth()->user()->getWorkLocations())->whereNull('status')->count();
+        }
+
         return view('home')->with([
-            'workOrders' => WorkOrder::all()
+            'workOrders' => WorkOrder::all(),
+            'nextWO' => $nextWO,
+            'technicians' => User::where('role', 'technician')->count()
         ]);
     }
 
